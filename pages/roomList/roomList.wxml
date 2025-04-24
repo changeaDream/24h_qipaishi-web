@@ -1,0 +1,55 @@
+<!--pages/roomList/roomList.wxml-->
+<view class="tabs">
+  <view class="item">
+    <van-dropdown-menu active-color="{{mainColor}}">
+      <van-dropdown-item value="{{ storeId }}" options="{{ stores }}"  bind:change="storeDropdown" />
+  </van-dropdown-menu>
+  </view>
+  <view class="item">
+    <view class="btn red" bindtap="openStoreDoor">开大门</view>
+  </view>
+</view>
+<view class="container">
+  <view class="list">
+    <view class="item" wx:for="{{doorList}}" wx:key="item">
+      <view class="left">
+        <view class="info">
+          <text class="name">{{item.roomName}}（{{item.type===1?'小包':item.type===2?'中包':'大包'}}）</text>
+        </view>
+        <view class="info">
+          <label>门店：</label>
+          <text>{{item.storeName}}</text>
+        </view>
+        <view class="info">
+          <label>状态：</label>
+          <text>{{item.status==1?'空闲':item.status==2?'待清洁':item.status==3?'使用中':item.status==4?'已预约':'禁用'}}</text>
+        </view>
+        <block wx:if="{{item.status == 2}}">
+          <view class="tip color-attention" wx:if="{{item.endTime}}">
+             待清洁 | {{item.startTime}}开始
+          </view>
+        </block>
+        <block wx:if="{{item.status == 3}}">
+          <view class="tip color-attention" wx:if="{{item.endTime}}">
+              使用中 | {{item.endTime}}结束
+          </view>
+        </block>
+        <block wx:if="{{item.status == 4}}">
+          <view class="tip color-attention" wx:if="{{item.endTime}}">
+              已预订 | {{item.startTime}}开始
+          </view>
+        </block>
+      </view>
+      <view class="right">
+      <block wx:if="{{userinfo.userType==12||userinfo.userType==13}}">
+        <view class="btn red" bindtap="openBlueDoor" data-lockdata="{{item.lockData}}" data-gatewayid="{{item.gatewayId}}"  data-roomid="{{item.roomId}}">
+            密码锁
+        </view>
+        <view class="btn red" bindtap="openDoor" data-roomid="{{item.roomId}}">开电</view>
+        <view class="btn red" bindtap="closeDoor" data-roomid="{{item.roomId}}">关电</view>
+      </block>
+      </view>
+    </view>
+  </view>
+  <view class="buttom">- 加载完毕 -</view>
+</view>
